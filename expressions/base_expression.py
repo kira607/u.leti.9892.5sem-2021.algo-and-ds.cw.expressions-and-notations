@@ -1,17 +1,34 @@
 from abc import ABC, abstractmethod
-from .unit import OperatorUnit, UnitType, operators
+from typing import List, Generator
+
+from expressions.token_groups.operator import operators
+from expressions.token import TokenType, Tokenizer, Token
 
 
 class BaseExpression(ABC):
     def __init__(self, expression: str):
-        self._data = None
-        self._parse(expression)
+        self._tokens = self.tokenize(expression)
+        self.validated = tuple(self._parse())
+        self._vars = {}
 
-    def reset(self) -> None:
+    def variables_names(self) -> Generator:
+        for token in self._tokens:
+            if token.type == TokenType.VARIABLE:
+                yield token.value
+
+    def set_variables(self, **variables):
+        self._vars = variables
+
+    @property
+    def value(self):
+        return self._eval()
+
+    @abstractmethod
+    def _parse(self) -> List:
         pass
 
     @abstractmethod
-    def _parse(self, expression: str) -> None:
+    def _eval(self) -> int:
         pass
 
     @staticmethod
@@ -19,4 +36,9 @@ class BaseExpression(ABC):
         if len(symbol) != 1:
             raise ValueError('symbol must be a string of a length of 1')
         if symbol in operators:
-            return UnitType.OPERATOR
+            return TokenType.OPERATOR
+
+    @staticmethod
+    def tokenize(expression: str) -> List[Token]:
+        tokenizer = Tokenizer()
+        return tokenizer.tokenize(expression)
