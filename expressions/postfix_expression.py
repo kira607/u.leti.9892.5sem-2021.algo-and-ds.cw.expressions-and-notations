@@ -10,7 +10,8 @@ class PostfixExpression(BaseExpression):
         for token in self._tokens:
             if token.type == TokenType.OPERATOR:
                 y = operands_stack.pop().value
-                x = operands_stack.pop(default=None).value if operands_stack.pop(default=None) else None
+                x = operands_stack.pop(default=None)
+                x = x.value if x else None
                 op = operators.get(token.value)
                 value = op(x, y) if x else op(y)
                 new_operand = Operand(value)

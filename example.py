@@ -63,9 +63,12 @@ def main():
         1: ('', {'x': e}),
         2: ('x abs 2 + 9.4 //', {'x': -16}),
         3: ('4 -', {}),
+        4: ('1-A//4+', {'A': 8})
     }
 
-    check_expression(*postfix_expressions[3], type_=PostfixExpression)
+    check_expression(*postfix_expressions[4], type_=PostfixExpression)
+
+    print(-1 // 8)
 
 
 if __name__ == '__main__':

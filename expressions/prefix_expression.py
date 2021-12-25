@@ -10,7 +10,8 @@ class PrefixExpression(BaseExpression):
         for token in self._tokens[::-1]:
             if token.type == TokenType.OPERATOR:
                 x = operands_stack.pop().value
-                y = operands_stack.pop(default=None).value if operands_stack.pop(default=None) else None
+                y = operands_stack.pop(default=None)
+                y = y.value if y else None
                 op = operators.get(token.value)
                 value = op(x, y) if y else op(x)
                 new_operand = Operand(value)

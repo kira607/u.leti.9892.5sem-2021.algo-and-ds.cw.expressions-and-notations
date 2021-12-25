@@ -5,7 +5,7 @@ from expressions.errors import InvalidExpressionError
 
 
 def python_eval(exp: str, variables: dict):
-    from math import cos, log, sin, cos, sin, tan, log, sqrt, fabs, log10  # noqa
+    from math import cos, log, sin, cos, sin, tan, log, sqrt, fabs, log10, factorial  # noqa
     from math import e, pi  # noqa
 
     def ctg(x):
@@ -14,7 +14,14 @@ def python_eval(exp: str, variables: dict):
     result = exp
     for k, v in variables.items():
         result = result.replace(k, f' {v} ')
-    result = result.replace('^', '**').replace('ln', 'log').replace('abs', 'fabs').replace('lg', 'log10')
+    result = (
+        result
+        .replace('^', '**')
+        .replace('ln', 'log')
+        .replace('abs', 'fabs')
+        .replace('lg', 'log10')
+        .replace('fact', 'factorial')
+    )
     return eval(result)
 
 
@@ -33,7 +40,7 @@ def python_eval(exp: str, variables: dict):
         ('-00', {}),
     )
 )
-def test_simple_expression___init__(expression, variables):
+def test_simple_expression(expression, variables):
     s = SimpleExpression(expression)
     s.set_variables(**variables)
     assert s.value == python_eval(expression, variables)
@@ -58,7 +65,7 @@ def test_simple_expression___init__(expression, variables):
         ('1-A/,/4+', {'A': 8}, InvalidExpressionError),
     ),
 )
-def test_simple_expression___init___with_exception(expression, variables, exception):
+def test_simple_expression_with_exception(expression, variables, exception):
     with pytest.raises(Exception):
         python_eval(expression, variables)
     with pytest.raises(exception):
