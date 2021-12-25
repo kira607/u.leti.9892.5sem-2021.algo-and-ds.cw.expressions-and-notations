@@ -1,6 +1,6 @@
 import pytest
 
-from expressions.token.tokens import Token, TokenType, Operator
+from expressions.token import Token, TokenType, Operator
 
 
 def test_token___init__():

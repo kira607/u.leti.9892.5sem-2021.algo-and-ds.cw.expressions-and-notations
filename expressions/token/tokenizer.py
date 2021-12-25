@@ -1,9 +1,10 @@
 from string import ascii_letters
 from typing import List
 
-from expressions.token_groups import functions, constants
-from expressions.token_groups.operator import operators
-from expressions.token.tokens import Token, Operator, Operand, Constant, Variable, Function, Bracket
+from ._base import Token
+from . import functions, constants, brackets, operators
+from . import Delimiter, Operand, Variable
+from ..errors import InvalidExpressionError
 
 
 class Tokenizer:
@@ -11,6 +12,12 @@ class Tokenizer:
         self.string = ''
 
     def tokenize(self, string: str) -> List[Token]:
+        '''
+        Convert an expression string into a list of tokens
+
+        :param string: expression
+        :return: list of tokens
+        '''
         self.string = string
         tokens = []
         number = ''
@@ -19,27 +26,38 @@ class Tokenizer:
             if ignore:
                 ignore -= 1 if ignore > 0 else 0
                 continue
+
             s = string[i]
 
             if s in '1234567890.':
                 number += s
             elif number:
+                if number.startswith('0') and number.count('0') < len(number):
+                    raise InvalidExpressionError('leading zeros in decimal integer literals are not permitted')
                 tokens.append(Operand(float(number)))
                 number = ''
 
             if s in operators:
-                tokens.append(Operator(s))
+                if s == '/' and string[i+1] == '/':
+                    tokens.append(operators.get_token('//'))
+                    ignore = 1
+                    continue
+                tokens.append(operators.get_token(s))
+            elif s == ',':
+                tokens.append(Delimiter(s, priority=-1))
             elif s in '()':
-                tokens.append(Bracket(s))
+                tokens.append(brackets.get_token(s))
             elif function := self.get_function(i):
-                tokens.append(Function(function))
+                tokens.append(functions.get_token(function))
                 ignore = len(function) - 1
             elif constant := self.get_constant(i):
-                tokens.append(Constant(constant))
+                tokens.append(constants.get_token(constant))
                 ignore = len(constant) - 1
             elif s in ascii_letters:
                 tokens.append(Variable(s))
         if number:
+            if number.startswith('0') and number.count('0') < len(number):
+                raise InvalidExpressionError('leading zeros in decimal integer literals are not permitted')
             tokens.append(Operand(float(number)))
 
         return tokens

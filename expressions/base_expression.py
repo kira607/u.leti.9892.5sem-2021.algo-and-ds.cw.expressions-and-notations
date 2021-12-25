@@ -1,15 +1,16 @@
 from abc import ABC, abstractmethod
-from typing import List, Generator
+from typing import List, Generator, Dict
 
-from expressions.token_groups.operator import operators
+from expressions.errors import InvalidExpressionError
+from expressions.token import operators
 from expressions.token import TokenType, Tokenizer, Token
 
 
 class BaseExpression(ABC):
     def __init__(self, expression: str):
         self._tokens = self.tokenize(expression)
-        self.validated = tuple(self._parse())
         self._vars = {}
+        self._validate()
 
     def variables_names(self) -> Generator:
         for token in self._tokens:
@@ -23,14 +24,6 @@ class BaseExpression(ABC):
     def value(self):
         return self._eval()
 
-    @abstractmethod
-    def _parse(self) -> List:
-        pass
-
-    @abstractmethod
-    def _eval(self) -> int:
-        pass
-
     @staticmethod
     def get_type(symbol: str):
         if len(symbol) != 1:
@@ -42,3 +35,38 @@ class BaseExpression(ABC):
     def tokenize(expression: str) -> List[Token]:
         tokenizer = Tokenizer()
         return tokenizer.tokenize(expression)
+
+    @abstractmethod
+    def _eval(self) -> int:
+        pass
+
+    def _validate(self):
+        prev_vars = self._vars
+        self._vars = self._mock_variables()
+
+        self._pre_validate()
+
+        try:
+            self._eval()
+        except ZeroDivisionError:
+            raise ZeroDivisionError('Expression contains division by zero')
+        except Exception:
+            raise InvalidExpressionError('Expression is invalid')
+        finally:
+            self._vars = prev_vars
+
+    def _pre_validate(self) -> None:
+        pass
+
+    def _get_variable_value(self, token):
+        var_name = token.value
+        value = self._vars.get(var_name)
+        if value is None:
+            raise RuntimeError(f'Variable "{var_name}" is not defined')
+        return value
+
+    def _mock_variables(self, default_value: int = 1) -> Dict[str, int]:
+        variables = {}
+        for var in self.variables_names():
+            variables[var] = default_value
+        return variables

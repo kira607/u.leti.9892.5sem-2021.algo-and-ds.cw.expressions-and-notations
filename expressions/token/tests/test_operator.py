@@ -1,4 +1,4 @@
-from expressions.token_groups import operators
+from expressions.token import operators
 
 
 def test_operators():
