@@ -16,7 +16,11 @@ class PrefixExpression(BaseExpression):
                 y = operands_stack.pop(default=None)
                 y = y.value if y else None
                 op = operators.get(token.value)
-                value = op(x, y) if y else op(x)
+                if y:
+                    value = op(x, y)
+                else:
+                    token.unary = True
+                    value = op(x)
                 new_operand = Operand(value)
                 operands_stack.push(new_operand)
             elif token.type == TokenType.OPERAND:

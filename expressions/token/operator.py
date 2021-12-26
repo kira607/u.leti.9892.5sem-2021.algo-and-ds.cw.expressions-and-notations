@@ -44,8 +44,8 @@ class Operators(TokenGroup):
         operator_data = self._group.get(operator_string)
         callback = operator_data.callback
         priority = operator_data.priority
-        unary = operator_data.possible_unary
-        return Operator(operator_string, callback=callback, priority=priority, unary=unary)
+        possible_unary = operator_data.possible_unary
+        return Operator(operator_string, callback=callback, priority=priority, possible_unary=possible_unary)
 
 
 operators = Operators()
@@ -61,8 +61,10 @@ class Operator(Token):
         value: __value_type__,
         callback: Callable = lambda: None,
         priority: int = None,
+        possible_unary: bool = False,
         unary: bool = False,
     ):
+        self.possible_unary = possible_unary
         self.unary = unary
         super(Operator, self).__init__(value, callback, priority)
 

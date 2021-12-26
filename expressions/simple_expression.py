@@ -10,29 +10,6 @@ from expressions.token import operators, constants
 class SimpleExpression(BaseExpression):
     __type__ = ExpressionType.SIMPLE
 
-    def _parse(self) -> List:
-        parsed = []
-        stack = Stack()
-        for token in self._tokens:
-            if token.type == TokenType.OPERATOR:
-                tk = operators.get(token.value)
-                while stack and stack.top() != '(' and tk.priority <= operators.get(stack.top().value).priority:
-                    parsed.append(stack.pop())
-                stack.push(token)
-            elif token.value == ')':
-                while stack:
-                    x = stack.pop()
-                    if x.value == '(':
-                        break
-                    parsed.append(x)
-            elif token == '(':
-                stack.push(token)
-            else:
-                parsed.append(token)
-        while stack:
-            parsed.append(stack.pop())
-        return parsed
-
     def _eval(self):
         operators_stack = Stack()
         operands_stack = Stack()
@@ -119,7 +96,12 @@ class SimpleExpression(BaseExpression):
             else:
                 operands_stack.push(var1)
 
-        op = operators.get(operators_stack.pop().value)
+        operator_token = operators_stack.pop()
+        op = operators.get(operator_token.value)
+
+        if len(args) == 1:
+            operator_token.unary = True
+
         new_operand = Operand(float(op(*args)))
         operands_stack.push(new_operand)
 
@@ -127,7 +109,7 @@ class SimpleExpression(BaseExpression):
         previous_token = None
         for i, token in enumerate(self._tokens):
             if i == 0:
-                if token.type == TokenType.OPERATOR and not token.unary:
+                if token.type == TokenType.OPERATOR and not token.possible_unary:
                     raise InvalidExpressionError(f'Expression starts with an non-unary operator {token.value}')
                 previous_token = token
                 continue
@@ -136,9 +118,9 @@ class SimpleExpression(BaseExpression):
                     raise InvalidExpressionError(f'Expression ends with an operator {token.value}')
                 previous_token = token
                 continue
-            if token.type == previous_token.type == TokenType.OPERATOR and not (token.unary and previous_token.unary):
+            if token.type == previous_token.type == TokenType.OPERATOR and not (token.possible_unary and previous_token.possible_unary):
                 raise InvalidExpressionError(f'{token.value} following operator {previous_token.value}')
             if token.type == previous_token.type == TokenType.OPERAND:
-                raise InvalidExpressionError()
+                raise InvalidExpressionError(f'Two operands in a row in simple expression: {token}, {previous_token}')
             previous_token = token
 

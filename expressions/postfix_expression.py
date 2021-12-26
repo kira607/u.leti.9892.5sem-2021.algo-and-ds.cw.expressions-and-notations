@@ -16,7 +16,11 @@ class PostfixExpression(BaseExpression):
                 x = operands_stack.pop(default=None)
                 x = x.value if x else None
                 op = operators.get(token.value)
-                value = op(x, y) if x else op(y)
+                if x:
+                    value = op(x, y)
+                else:
+                    token.unary = True
+                    value = op(y)
                 new_operand = Operand(value)
                 operands_stack.push(new_operand)
             elif token.type == TokenType.OPERAND:
