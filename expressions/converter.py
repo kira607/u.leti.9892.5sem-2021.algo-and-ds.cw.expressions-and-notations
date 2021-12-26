@@ -26,9 +26,20 @@ class Converter:
             raise ValueError(f'Unsupported conversion from {expression.type} to {target_type.name.lower()}')
         return converter(expression)
 
-    @staticmethod
-    def simple_to_prefix(expression: SimpleExpression):
-        pass
+    def simple_to_prefix(self, expression: SimpleExpression):
+        return self.postfix_to_prefix(
+            self.simple_to_postfix(expression)
+        )
+
+    def prefix_to_postfix(self, expression: PrefixExpression):
+        return self.simple_to_postfix(
+            self.prefix_to_simple(expression)
+        )
+
+    def postfix_to_simple(self, expression: PostfixExpression):
+        return self.prefix_to_simple(
+            self.postfix_to_prefix(expression)
+        )
 
     @staticmethod
     def simple_to_postfix(expression: SimpleExpression):
@@ -106,14 +117,6 @@ class Converter:
         expr = SimpleExpression.from_tokens(result)
         expr.set_variables(**expression.variables)
         return expr
-
-    @staticmethod
-    def prefix_to_postfix(expression: PrefixExpression):
-        pass
-
-    @staticmethod
-    def postfix_to_simple(expression: PostfixExpression):
-        pass
 
     @staticmethod
     def postfix_to_prefix(expression: PostfixExpression):
