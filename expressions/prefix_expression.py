@@ -28,8 +28,6 @@ class PrefixExpression(BaseExpression):
                 operands_stack.push(Operand(float(token())))
             elif token.type == TokenType.BRACKET:
                 raise InvalidExpressionError(f'{self.__class__.__name__} cannot have brackets')
-            elif token.type == TokenType.DELIMITER:
-                raise InvalidExpressionError(f'{self.__class__.__name__} cannot have delimiters')
             elif token.type == TokenType.FUNCTION:
                 x = operands_stack.pop().value
                 f = functions.get(token.value)

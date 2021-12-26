@@ -36,7 +36,6 @@ class SimpleExpression(BaseExpression):
     def _eval(self):
         operators_stack = Stack()
         operands_stack = Stack()
-        function_args = []
         for token in self._tokens:
             if token.type == TokenType.OPERATOR:
                 if not operators_stack:
@@ -65,35 +64,23 @@ class SimpleExpression(BaseExpression):
                     operators_stack.push(token)
                     operands_stack.push(token)
                 elif token.value == ')':
-                    while operators_stack.top().value != '(' and operators_stack.top().value != ',':
+                    while operators_stack.top().value != '(':
                         self._eval_on_stacks(operators_stack, operands_stack)
                     operators_stack.pop()
                     # delete the bracket from operands stack     [4, ), 8, ...]
                     # this is value of expression inside brackets ^  ^
                     #                 this bracket should be removed |
                     v = operands_stack.pop()
-                    if operands_stack.pop().type == TokenType.DELIMITER:
-                        function_args.append(v.value)
-                    else:
-                        operands_stack.push(v)
+                    operands_stack.pop()
+                    operands_stack.push(v)
                     # apply function (if exists)
                     if not operators_stack:
                         continue
                     if operators_stack.top().type == TokenType.FUNCTION:
-                        function_args = [operands_stack.pop().value] if not function_args else function_args
+                        function_arg = operands_stack.pop().value
                         f = operators_stack.pop()
-                        new_operand = Operand(f(*function_args))
-                        function_args = []
+                        new_operand = Operand(f(function_arg))
                         operands_stack.push(new_operand)
-            elif token.type == TokenType.DELIMITER:
-                while operators_stack.top().value != '(' and operators_stack.top().value != ',':
-                    self._eval_on_stacks(operators_stack, operands_stack)
-                operators_stack.pop()
-                v = operands_stack.pop()
-                operands_stack.pop()
-                operands_stack.push(token)
-                operators_stack.push(token)
-                function_args.append(v.value)
             elif token.type == TokenType.FUNCTION:
                 operators_stack.push(token)
         while operators_stack:

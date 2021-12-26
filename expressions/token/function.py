@@ -31,11 +31,11 @@ class Functions(TokenGroup):
             'tg': FunctionDefinition('tg', lambda x: math.tan(x)),
             'ctg': FunctionDefinition('ctg', lambda x: math.cos(x) / math.sin(x)),
             'ln': FunctionDefinition('ln', lambda x: math.log(x)),
-            'log': FunctionDefinition('log', lambda x, base=math.e: math.log(x, base)),
+            'lg': FunctionDefinition('log', lambda x: math.log10(x)),
             'sqrt': FunctionDefinition('sqrt', lambda x: math.sqrt(x)),
 
+            'log2': FunctionDefinition('log2', lambda x: math.log2(x)),
             'abs': FunctionDefinition('abs', lambda x: math.fabs(x)),
-            'lg': FunctionDefinition('lg', lambda x: math.log10(x)),
             'fact': FunctionDefinition('fact', lambda x: math.factorial(x))
         }
 

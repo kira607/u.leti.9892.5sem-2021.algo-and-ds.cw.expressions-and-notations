@@ -3,7 +3,7 @@ from typing import List
 
 from ._base import Token
 from . import functions, constants, brackets, operators
-from . import Delimiter, Operand, Variable
+from . import Operand, Variable
 from ..errors import InvalidExpressionError
 
 
@@ -43,8 +43,6 @@ class Tokenizer:
                     ignore = 1
                     continue
                 tokens.append(operators.get_token(s))
-            elif s == ',':
-                tokens.append(Delimiter(s, priority=-1))
             elif s in '()':
                 tokens.append(brackets.get_token(s))
             elif function := self.get_function(i):

@@ -7,8 +7,6 @@ from .bracket import brackets
 from .constant import Constant
 from .constant import constants
 
-from .delimeter import Delimiter
-
 from .function import Function
 from .function import functions
 

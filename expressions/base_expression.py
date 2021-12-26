@@ -8,14 +8,14 @@ from expressions.token import TokenType, Tokenizer, Token
 
 
 class ExpressionType(Enum):
-    __BASE = auto()
+    _BASE = auto()
     SIMPLE = auto()
     PREFIX = auto()
     POSTFIX = auto()
 
 
 class BaseExpression(ABC):
-    __type__ = ExpressionType.__BASE
+    __type__ = ExpressionType._BASE
 
     def __init__(self, expression: str):
         self._tokens = self.tokenize(expression)

@@ -37,9 +37,9 @@ def check_expression(expression: str, variables: dict, python_eval: bool = False
 
 def main():
     simple_expressions = {
-        1: ('1+ 2*e^x - (10 * 2 ^ cos(4*x)  -ln(4)*abs(log(sin(522.44-pi*2), 2)))', {'x': 10}),
+        1: ('1+ 2*e^x - (10 * 2 ^ cos(4*x)  -ln(4)*abs(log2(sin(522.44-pi*2), 2)))', {'x': 10}),
         2: ('1  + 2*e^x - (10 * 2 ^ (4*x)  -4*522.44-pi*2)', {'x': 10}),
-        3: ('log(14+2, 1+1)', {}),
+        3: ('lg(14+2)', {}),
         4: ('+4 - (-1)', {}),
         5: ('+-+4 +(- (---1))', {}),
         6: ('----+--(-++-++-(-1))', {}),
@@ -49,7 +49,7 @@ def main():
         10: ('1-A%4', {'A': 8}),
     }
 
-    check_expression(*simple_expressions[10], python_eval=True)
+    check_expression(*simple_expressions[3], python_eval=True)
 
     prefix_expressions = {
         1: ('+ 2 * e / 2 x', {'x': e}),

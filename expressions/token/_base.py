@@ -12,7 +12,6 @@ class TokenType(Enum):
     BRACKET = auto()
     FUNCTION = auto()
     CONSTANT = auto()
-    DELIMITER = auto()
     NONE = auto()
 
 

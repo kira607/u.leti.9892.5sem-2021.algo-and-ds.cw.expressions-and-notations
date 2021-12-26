@@ -5,7 +5,7 @@ from expressions.errors import InvalidExpressionError
 
 
 def python_eval(exp: str, variables: dict):
-    from math import cos, log, sin, cos, sin, tan, log, sqrt, fabs, log10, factorial  # noqa
+    from math import cos, log, sin, cos, sin, tan, log, log10, log2, sqrt, fabs, log10, factorial  # noqa
     from math import e, pi  # noqa
 
     def ctg(x):
@@ -28,9 +28,9 @@ def python_eval(exp: str, variables: dict):
 @pytest.mark.parametrize(
     'expression, variables',
     (
-        ('1+2*e^x - (10 * 2 ^ cos(4*x)  -ln(4)*abs(log(sin(522.44-pi*2), pi)))', {'x': 10}),
+        ('1+2*e^x - (10 * 2 ^ cos(4*x)  -ln(4)*abs(lg(sin(522.44-pi*2))))', {'x': 10}),
         ('1  +- 2*e^x - (10 * 2 ^ (4*x)  -4*522.44-pi*2)', {'x': 10}),
-        ('log(14+2, 1+1)', {}),
+        ('log2(14+2)', {}),
         ('+4 - (-1)', {}),
         ('+-+4 +(- (---1))', {}),
         ('----+--(-++-++-(-1))', {}),
