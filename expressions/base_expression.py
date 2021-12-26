@@ -1,10 +1,13 @@
 from abc import ABC, abstractmethod
 from enum import Enum, auto
-from typing import List, Generator, Dict, Iterable
+from typing import List, Generator, Dict, Iterable, Tuple
 
 from expressions.errors import InvalidExpressionError
 from expressions.token import operators
 from expressions.token import TokenType, Tokenizer, Token
+
+
+_tokenizer = Tokenizer()
 
 
 class ExpressionType(Enum):
@@ -25,10 +28,12 @@ class BaseExpression(ABC):
     def __str__(self):
         return ' '.join(str(t.value) for t in self._tokens)
 
-    def variables_names(self) -> Generator:
+    def variables_names(self) -> Tuple:
+        names = set()
         for token in self._tokens:
             if token.type == TokenType.VARIABLE:
-                yield token.value
+                names.add(token.value)
+        return tuple(names)
 
     @property
     def variables(self):
@@ -64,8 +69,8 @@ class BaseExpression(ABC):
 
     @staticmethod
     def tokenize(expression: str) -> List[Token]:
-        tokenizer = Tokenizer()
-        return tokenizer.tokenize(expression)
+        global _tokenizer
+        return _tokenizer.tokenize(expression)
 
     @abstractmethod
     def _eval(self) -> int:

@@ -1,6 +1,9 @@
 from typing import Optional
 
-from expressions import BaseExpression, InfixExpression, PrefixExpression, PostfixExpression
+from .base_expression import BaseExpression
+from .infix_expression import InfixExpression
+from .prefix_expression import PrefixExpression
+from .postfix_expression import PostfixExpression
 
 
 def get_expression(expression_string) -> Optional[BaseExpression]:

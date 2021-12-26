@@ -32,7 +32,7 @@ class Tokenizer:
             if s in '1234567890.':
                 number += s
             elif number:
-                if number.startswith('0') and number.count('0') < len(number):
+                if number.startswith('0') and number.count('0') == len(number):
                     raise InvalidExpressionError('leading zeros in decimal integer literals are not permitted')
                 tokens.append(Operand(float(number)))
                 number = ''

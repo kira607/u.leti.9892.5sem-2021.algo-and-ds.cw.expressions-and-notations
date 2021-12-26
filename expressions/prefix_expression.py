@@ -1,8 +1,8 @@
-from expressions import BaseExpression
-from expressions.base_expression import ExpressionType
-from expressions.errors import InvalidExpressionError
-from expressions.slib import Stack
-from expressions.token import TokenType, operators, Operand, functions
+from .base_expression import BaseExpression
+from .base_expression import ExpressionType
+from .errors import InvalidExpressionError
+from .slib import Stack
+from .token import TokenType, operators, Operand, functions
 
 
 class PrefixExpression(BaseExpression):

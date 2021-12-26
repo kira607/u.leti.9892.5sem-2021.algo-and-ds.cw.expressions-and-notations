@@ -36,7 +36,7 @@ class Functions(TokenGroup):
 
             'log2': FunctionDefinition('log2', lambda x: math.log2(x)),
             'abs': FunctionDefinition('abs', lambda x: math.fabs(x)),
-            'fact': FunctionDefinition('fact', lambda x: math.factorial(x))
+            'fact': FunctionDefinition('fact', lambda x: float(math.factorial(int(x))))
         }
 
     def get_token(self, function_string) -> 'Function':
