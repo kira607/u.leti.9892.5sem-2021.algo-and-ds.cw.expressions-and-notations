@@ -116,11 +116,13 @@ class SimpleExpression(BaseExpression):
             if i == len(self._tokens) - 1:
                 if token.type == TokenType.OPERATOR:
                     raise InvalidExpressionError(f'Expression ends with an operator {token.value}')
-                previous_token = token
-                continue
             if token.type == previous_token.type == TokenType.OPERATOR and not (token.possible_unary and previous_token.possible_unary):
                 raise InvalidExpressionError(f'{token.value} following operator {previous_token.value}')
-            if token.type == previous_token.type == TokenType.OPERAND:
+            if (
+                token.type == previous_token.type == TokenType.OPERAND
+                or token.type == previous_token.type == TokenType.VARIABLE
+                or token.type == previous_token.type == TokenType.CONSTANT
+            ):
                 raise InvalidExpressionError(f'Two operands in a row in simple expression: {token}, {previous_token}')
             previous_token = token
 

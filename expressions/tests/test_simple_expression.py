@@ -63,6 +63,7 @@ def test_simple_expression(expression, variables):
         ('/1-A//4', {'A': 8}, InvalidExpressionError),
         ('1-A//4+', {'A': 8}, InvalidExpressionError),
         ('1-A/,/4+', {'A': 8}, InvalidExpressionError),
+        ('+ 3 4', {}, InvalidExpressionError),
     ),
 )
 def test_simple_expression_with_exception(expression, variables, exception):

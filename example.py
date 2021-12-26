@@ -1,9 +1,8 @@
 from math import e, cos, log, sin, pi  # noqa
 from typing import Type
 
-from expressions import BaseExpression, SimpleExpression, PrefixExpression, PostfixExpression, to_postfix, to_prefix, \
+from expressions import BaseExpression, SimpleExpression, to_postfix, to_prefix, \
     to_simple
-from expressions.token import TokenType
 
 
 def evaluable(exp: str, variables: dict):
@@ -50,9 +49,10 @@ def main():
         8: ('(1)', {}),
         9: ('abs(-16)', {}),
         10: ('1-A%4', {'A': 8}),
+        11: ('+ 3 4', {})
     }
 
-    # check_expression(*simple_expressions[3], python_eval=True)
+    check_expression(*simple_expressions[11], python_eval=True)
 
     prefix_expressions = {
         1: ('+ 2 * e / 2 x', {'x': e}),
