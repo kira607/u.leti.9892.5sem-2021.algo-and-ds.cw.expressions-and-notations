@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from enum import Enum, auto
 from typing import List, Generator, Dict
 
 from expressions.errors import InvalidExpressionError
@@ -6,11 +7,23 @@ from expressions.token import operators
 from expressions.token import TokenType, Tokenizer, Token
 
 
+class ExpressionType(Enum):
+    __BASE = auto()
+    SIMPLE = auto()
+    PREFIX = auto()
+    POSTFIX = auto()
+
+
 class BaseExpression(ABC):
+    __type__ = ExpressionType.__BASE
+
     def __init__(self, expression: str):
         self._tokens = self.tokenize(expression)
         self._vars = {}
         self._validate()
+
+    def __str__(self):
+        return  ' '.join(str(t.value) for t in self._tokens)
 
     def variables_names(self) -> Generator:
         for token in self._tokens:
@@ -23,6 +36,10 @@ class BaseExpression(ABC):
     @property
     def value(self):
         return self._eval()
+
+    @property
+    def type(self):
+        return self.__type__.name.lower()
 
     @staticmethod
     def get_type(symbol: str):

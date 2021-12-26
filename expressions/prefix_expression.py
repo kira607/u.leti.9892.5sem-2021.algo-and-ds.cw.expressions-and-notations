@@ -1,10 +1,13 @@
 from expressions import BaseExpression
+from expressions.base_expression import ExpressionType
 from expressions.errors import InvalidExpressionError
 from expressions.slib import Stack
 from expressions.token import TokenType, operators, Operand, functions
 
 
 class PrefixExpression(BaseExpression):
+    __type__ = ExpressionType.PREFIX
+
     def _eval(self) -> int:
         operands_stack = Stack()
         for token in self._tokens[::-1]:

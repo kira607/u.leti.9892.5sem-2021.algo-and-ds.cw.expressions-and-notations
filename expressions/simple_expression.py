@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from .base_expression import BaseExpression
+from .base_expression import BaseExpression, ExpressionType
 from .errors import InvalidExpressionError
 from .slib import Stack
 from expressions.token import TokenType, Operand
@@ -8,6 +8,8 @@ from expressions.token import operators, constants
 
 
 class SimpleExpression(BaseExpression):
+    __type__ = ExpressionType.SIMPLE
+
     def _parse(self) -> List:
         parsed = []
         stack = Stack()
