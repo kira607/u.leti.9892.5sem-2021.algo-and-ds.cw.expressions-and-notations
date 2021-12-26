@@ -1,6 +1,6 @@
 import pytest
 
-from expressions import SimpleExpression
+from expressions import InfixExpression
 from expressions.errors import InvalidExpressionError
 
 
@@ -40,8 +40,8 @@ def python_eval(exp: str, variables: dict):
         ('-00', {}),
     )
 )
-def test_simple_expression(expression, variables):
-    s = SimpleExpression(expression)
+def test_infix_expression(expression, variables):
+    s = InfixExpression(expression)
     s.set_variables(**variables)
     assert s.value == python_eval(expression, variables)
 
@@ -66,10 +66,10 @@ def test_simple_expression(expression, variables):
         ('+ 3 4', {}, InvalidExpressionError),
     ),
 )
-def test_simple_expression_with_exception(expression, variables, exception):
+def test_infix_expression_with_exception(expression, variables, exception):
     with pytest.raises(Exception):
         python_eval(expression, variables)
     with pytest.raises(exception):
-        s = SimpleExpression(expression)
+        s = InfixExpression(expression)
         s.set_variables(**variables)
         _ = s.value

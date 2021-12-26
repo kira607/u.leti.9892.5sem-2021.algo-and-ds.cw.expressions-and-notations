@@ -4,19 +4,19 @@ from .base_expression import ExpressionType, BaseExpression
 from .errors import InvalidExpressionError
 from .postfix_expression import PostfixExpression
 from .prefix_expression import PrefixExpression
-from .simple_expression import SimpleExpression
+from .infix_expression import InfixExpression
 
 
 class Converter:
     def __init__(self):
         self._converters = {
-            (ExpressionType.SIMPLE, ExpressionType.SIMPLE): lambda x: x,
-            (ExpressionType.SIMPLE, ExpressionType.PREFIX): self.simple_to_prefix,
-            (ExpressionType.SIMPLE, ExpressionType.POSTFIX): self.simple_to_postfix,
-            (ExpressionType.PREFIX, ExpressionType.SIMPLE): self.prefix_to_simple,
+            (ExpressionType.INFIX, ExpressionType.INFIX): lambda x: x,
+            (ExpressionType.INFIX, ExpressionType.PREFIX): self.infix_to_prefix,
+            (ExpressionType.INFIX, ExpressionType.POSTFIX): self.infix_to_postfix,
+            (ExpressionType.PREFIX, ExpressionType.INFIX): self.prefix_to_infix,
             (ExpressionType.PREFIX, ExpressionType.PREFIX): lambda x: x,
             (ExpressionType.PREFIX, ExpressionType.POSTFIX): self.prefix_to_postfix,
-            (ExpressionType.POSTFIX, ExpressionType.SIMPLE): self.postfix_to_simple,
+            (ExpressionType.POSTFIX, ExpressionType.INFIX): self.postfix_to_infix,
             (ExpressionType.POSTFIX, ExpressionType.PREFIX): self.postfix_to_prefix,
             (ExpressionType.POSTFIX, ExpressionType.POSTFIX): lambda x: x,
         }
@@ -26,23 +26,23 @@ class Converter:
             raise ValueError(f'Unsupported conversion from {expression.type} to {target_type.name.lower()}')
         return converter(expression)
 
-    def simple_to_prefix(self, expression: SimpleExpression):
+    def infix_to_prefix(self, expression: InfixExpression):
         return self.postfix_to_prefix(
-            self.simple_to_postfix(expression)
+            self.infix_to_postfix(expression)
         )
 
     def prefix_to_postfix(self, expression: PrefixExpression):
-        return self.simple_to_postfix(
-            self.prefix_to_simple(expression)
+        return self.infix_to_postfix(
+            self.prefix_to_infix(expression)
         )
 
-    def postfix_to_simple(self, expression: PostfixExpression):
-        return self.prefix_to_simple(
+    def postfix_to_infix(self, expression: PostfixExpression):
+        return self.prefix_to_infix(
             self.postfix_to_prefix(expression)
         )
 
     @staticmethod
-    def simple_to_postfix(expression: SimpleExpression):
+    def infix_to_postfix(expression: InfixExpression):
         result = []
         operators_stack = Stack()
         for token in expression.tokens:
@@ -84,7 +84,7 @@ class Converter:
         return expr
 
     @staticmethod
-    def prefix_to_simple(expression: PrefixExpression):
+    def prefix_to_infix(expression: PrefixExpression):
         stack = Stack()
         for token in expression.tokens[::-1]:
             if token.type == TokenType.OPERAND:
@@ -114,7 +114,7 @@ class Converter:
 
         result = stack.pop()
 
-        expr = SimpleExpression.from_tokens(result)
+        expr = InfixExpression.from_tokens(result)
         expr.set_variables(**expression.variables)
         return expr
 
@@ -164,6 +164,6 @@ def to_prefix(expression: BaseExpression):
     return _converter.convert(expression, ExpressionType.PREFIX)
 
 
-def to_simple(expression: BaseExpression):
+def to_infix(expression: BaseExpression):
     global _converter
-    return _converter.convert(expression, ExpressionType.SIMPLE)
+    return _converter.convert(expression, ExpressionType.INFIX)

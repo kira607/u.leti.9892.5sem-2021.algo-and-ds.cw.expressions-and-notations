@@ -1,4 +1,4 @@
-from expressions import get_expression, to_simple, to_prefix, to_postfix
+from expressions import get_expression, to_infix, to_prefix, to_postfix
 from expressions.token import functions
 
 
@@ -39,8 +39,8 @@ def main():
 
         print(f'Evaluation: ')
 
-        simple = to_simple(expression)
-        print(f'Simple: {simple} = {simple.value}')
+        infix = to_infix(expression)
+        print(f'Infix: {infix} = {infix.value}')
 
         prefix = to_prefix(expression)
         print(f'Prefix {prefix} = {prefix.value}')

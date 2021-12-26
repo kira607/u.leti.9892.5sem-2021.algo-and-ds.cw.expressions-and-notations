@@ -9,7 +9,7 @@ from expressions.token import TokenType, Tokenizer, Token
 
 class ExpressionType(Enum):
     _BASE = auto()
-    SIMPLE = auto()
+    INFIX = auto()
     PREFIX = auto()
     POSTFIX = auto()
 

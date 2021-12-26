@@ -7,8 +7,8 @@ from expressions.token import TokenType, Operand
 from expressions.token import operators, constants
 
 
-class SimpleExpression(BaseExpression):
-    __type__ = ExpressionType.SIMPLE
+class InfixExpression(BaseExpression):
+    __type__ = ExpressionType.INFIX
 
     def _eval(self):
         operators_stack = Stack()
@@ -123,6 +123,6 @@ class SimpleExpression(BaseExpression):
                 or token.type == previous_token.type == TokenType.VARIABLE
                 or token.type == previous_token.type == TokenType.CONSTANT
             ):
-                raise InvalidExpressionError(f'Two operands in a row in simple expression: {token}, {previous_token}')
+                raise InvalidExpressionError(f'Two operands in a row in infix expression: {token}, {previous_token}')
             previous_token = token
 
